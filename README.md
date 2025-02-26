@@ -47,9 +47,9 @@ final smartCache = SmartCache();
 dio.interceptors.add(CacheInterceptor(smartCache));
 ```
 
-## Uso
+## How to Use
 
-### Uso Básico
+### Basic Usage
 
 ```dart
 // Storing data
@@ -65,7 +65,7 @@ await smartCache.clear();
 await smartCache.close();
 ```
 
-### Uso com Dio
+### Example with Dio
 
 ```dart
 // Request without cache
