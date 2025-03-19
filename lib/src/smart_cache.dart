@@ -119,4 +119,44 @@ class SmartCache {
     _maintenanceTimer?.cancel();
     await _database.close();
   }
+
+  /// Removes an entry from the database associated with the given [key].
+  ///
+  /// This method asynchronously deletes the entry identified by the [key]
+  /// from the underlying database. If the key does not exist, no action
+  /// is taken.
+  ///
+  /// [key]: The unique identifier for the entry to be removed.
+  ///
+  /// Returns a [Future] that completes when the removal operation is finished.
+  Future<void> remove(String key) async {
+    await _database.removeEntry(key);
+  }
+
+  /// Removes all entries from the database whose keys match the given pattern.
+  ///
+  /// This method retrieves all keys that match the specified [pattern] and
+  /// iterates through them, removing each corresponding entry from the database.
+  ///
+  /// [pattern]: A string pattern used to match keys in the database.
+  ///
+  /// Returns a [Future] that completes when all matching entries have been removed.
+  Future<void> removeByPattern(String pattern) async {
+    final keys = await getKeysByPrefix(pattern);
+    for (final key in keys) {
+      await _database.removeEntry(key);
+    }
+  }
+
+  /// Returns a list of all cache keys that start with the given prefix.
+  ///
+  /// This can be useful for finding all keys related to a specific category
+  /// or feature in your application.
+  ///
+  /// [prefix]: The prefix to search for.
+  ///
+  /// Returns a [Future] that completes with a list of matching keys.
+  Future<List<String>> getKeysByPrefix(String prefix) async {
+    return await _database.getKeysByPattern('$prefix%');
+  }
 }

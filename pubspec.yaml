@@ -1,6 +1,6 @@
 name: smart_cache
 description: "A simple and efficient caching solution for Flutter applications using SQLite."
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/Morpa/smart_cache
 
 environment:

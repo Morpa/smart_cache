@@ -113,6 +113,36 @@ class AppDatabase extends _$AppDatabase {
           ..where((tbl) => tbl.timestamp.isSmallerThanValue(cutoffTime)))
         .go();
   }
+
+  /// Removes an entry from the cache database based on the provided key.
+  ///
+  /// This method deletes the entry from the `cacheEntries` table where the
+  /// `key` matches the provided [key].
+  ///
+  /// [key]: The key of the entry to be removed from the cache.
+  ///
+  /// Returns a [Future] that completes when the entry has been removed.
+  Future<void> removeEntry(String key) async {
+    await (delete(cacheEntries)..where((tbl) => tbl.key.equals(key))).go();
+  }
+
+  /// Retrieves a list of keys from the cache entries that match the specified pattern.
+  ///
+  /// The method performs a query on the `cacheEntries` table, filtering the results
+  /// to include only those entries whose keys match the given [pattern]. The pattern
+  /// is matched using a SQL `LIKE` clause with wildcards.
+  ///
+  /// Returns a `Future` that resolves to a list of keys as strings.
+  ///
+  /// - Parameter pattern: The pattern to match keys against. Wildcards (`%`) can be
+  ///   used to match any sequence of characters.
+  /// - Returns: A `Future` containing a list of keys that match the specified pattern.
+  Future<List<String>> getKeysByPattern(String pattern) async {
+    final query = select(cacheEntries)
+      ..where((tbl) => tbl.key.like('%$pattern%'));
+    final results = await query.get();
+    return results.map((entry) => entry.key).toList();
+  }
 }
 
 LazyDatabase _openConnection() {
